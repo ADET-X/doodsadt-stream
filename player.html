@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>doodsadt - Watch</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff;
+      color: #000;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid #ddd;
+    }
+    .logo {
+      font-weight: bold;
+      font-size: 24px;
+    }
+    .nav-buttons a {
+      background: #eee;
+      padding: 6px 14px;
+      border-radius: 16px;
+      margin-left: 8px;
+      text-decoration: none;
+      color: #000;
+      font-size: 14px;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+    video {
+      width: 100%;
+      max-width: 720px;
+      border-radius: 8px;
+      background: #000;
+    }
+    #errorMessage {
+      text-align: center;
+      color: red;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="logo">doodsadt</div>
+    <div class="nav-buttons">
+      <a href="upload.html">Upload</a>
+      <a href="#">Advertise</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <video id="videoPlayer" controls autoplay></video>
+  </div>
+  <p id="errorMessage"></p>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const videoId = params.get("video");
+    const cdn = "vz-79ce93d9-a29.b-cdn.net";
+    const video = document.getElementById("videoPlayer");
+    const errorMessage = document.getElementById("errorMessage");
+
+    if (videoId) {
+      video.src = `https://${cdn}/${videoId}/playlist.m3u8`;
+    } else {
+      errorMessage.innerText = "Video ID tidak ditemukan.";
+    }
+
+    video.addEventListener('error', () => {
+      errorMessage.innerText = "Video gagal dimuat. Cek URL atau status video di Bunny.net.";
+    });
+  </script>
+</body>
+</html>
