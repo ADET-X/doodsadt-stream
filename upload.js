@@ -45,7 +45,7 @@ async function uploadVideo() {
     return;
   }
 
-  status.innerText = "Upload complete! Waiting for Bunny to process the video...";
+  status.innerText = "Upload complete! Processing video...";
 
   let isReady = false;
   for (let i = 0; i < 20; i++) {
@@ -61,9 +61,9 @@ async function uploadVideo() {
   }
 
   if (isReady) {
-    status.innerText = "Video ready! Redirecting to player...";
-    window.location.href = `player.html?video=${videoGuid}`;
+    const videoLink = `player.html?video=${videoGuid}`;
+    status.innerHTML = `Video ready! <a href="${videoLink}" target="_blank">Watch Video</a>`;
   } else {
-    status.innerText = "Video uploaded but not ready yet. Try opening player later.";
+    status.innerText = "Video uploaded but still processing. Check player later.";
   }
 }
