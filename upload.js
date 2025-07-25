@@ -13,11 +13,14 @@ async function uploadVideo() {
   const formData = new FormData();
   formData.append("file", file);
 
+  const apiKey = "d947be7b-4bf6-44d3-8d8a-36f41857bb4a";
+  const authHeader = "Basic " + btoa(":" + apiKey);
+
   try {
     const res = await fetch("https://pixeldrain.com/api/file", {
       method: "POST",
       headers: {
-        "Authorization": "d947be7b-4bf6-44d3-8d8a-36f41857bb4a"
+        "Authorization": authHeader
       },
       body: formData
     });
@@ -32,7 +35,7 @@ async function uploadVideo() {
     const data = await res.json();
     console.log("Pixeldrain response:", data);
 
-    if (!data || data.success !== true) {
+    if (!data || !data.success) {
       status.innerText = "Upload failed: " + (data.message || "Unknown error.");
       return;
     }
