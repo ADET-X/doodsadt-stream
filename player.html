@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watch on doodsadt</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; background: #fff; color: #000; }
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #ddd; }
+    .navbar .logo { font-weight: bold; font-size: 22px; }
+    .navbar .nav-btns a { background: #f5f5f5; padding: 6px 14px; border-radius: 16px; margin-left: 8px; text-decoration: none; color: #000; font-size: 14px; }
+    .player-container { width: 100%; height: 50vh; background: #000; display: flex; align-items: center; justify-content: center; }
+    iframe { width: 100%; height: 100%; border: none; }
+    .download-btn, .more-videos-btn {
+      display: block;
+      width: 200px;
+      margin: 20px auto;
+      padding: 10px;
+      background: #444;
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+    .download-btn:hover, .more-videos-btn:hover {
+      background: #333;
+    }
+    @media (max-width: 768px) {
+      .player-container { height: 40vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <div class="logo">doodsadt</div>
+    <div class="nav-btns">
+      <a href="index.html">Upload</a>
+      <a href="#">Advertise</a>
+    </div>
+  </div>
+  <div class="player-container">
+    <iframe id="videoFrame" allowfullscreen></iframe>
+  </div>
+  <a class="download-btn" href="https://goeco.mobi/9WMQezdQ" target="_blank">Download Video</a>
+  <a class="more-videos-btn" href="https://www.profitableratecpm.com/qyvppnqi?key=d80fc662663a8a871a3e06b3aeabcb8d" target="_blank">Video Lainnya</a>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const videoId = params.get("video");
+    const frame = document.getElementById("videoFrame");
+    if (videoId) {
+      frame.src = `https://dood.to/e/${videoId}`;
+    } else {
+      frame.srcdoc = "<h2 style='color:white;text-align:center;'>No video ID found</h2>";
+    }
+  </script>
+</body>
+</html>
