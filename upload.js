@@ -4,11 +4,11 @@ async function uploadVideo() {
   const file = fileInput.files[0];
 
   if (!file) {
-    status.innerText = "Please select a video file.";
+    status.innerText = "❗ Please select a video file first.";
     return;
   }
 
-  status.innerHTML = "<p><em>Uploading to Pixeldrain, please wait...</em></p>";
+  status.innerHTML = "<em>📤 Uploading to Pixeldrain, please wait...</em>";
 
   const formData = new FormData();
   formData.append("file", file);
@@ -27,16 +27,14 @@ async function uploadVideo() {
 
     if (!res.ok) {
       const errorText = await res.text();
-      status.innerText = "Upload failed: " + errorText;
       console.error("Upload failed:", errorText);
+      status.innerHTML = `<span style="color:red;">❌ Upload failed: ${errorText}</span>`;
       return;
     }
 
     const data = await res.json();
-    console.log("Pixeldrain response:", data);
-
     if (!data || !data.success) {
-      status.innerText = "Upload failed: " + (data.message || "Unknown error.");
+      status.innerHTML = `<span style="color:red;">❌ Upload failed: ${data.message || "Unknown error"}</span>`;
       return;
     }
 
@@ -45,19 +43,20 @@ async function uploadVideo() {
     const directUrl = `https://pixeldrain.com/api/file/${fileId}?download`;
 
     status.innerHTML = `
-      <h3>Upload Complete!</h3>
-      <video controls width="100%" style="max-width:720px;">
+      <h3>✅ Upload Complete!</h3>
+      <video controls>
         <source src="${directUrl}" type="video/mp4">
-        Your browser does not support HTML5 video.
+        Your browser does not support the video tag.
       </video>
       <br><br>
       <input class="link" type="text" value="${fileUrl}" id="videoLink" readonly>
-      <button onclick="copyLink()">Copy</button>
+      <button onclick="copyLink()">📋 Copy Link</button>
+      <a href="player.html?id=${fileId}"><button>▶ Play</button></a>
       <a href="${directUrl}" download><button>⬇ Download</button></a>
     `;
   } catch (error) {
-    status.innerText = "Upload failed: " + error.message;
-    console.error("Exception:", error);
+    console.error("Error:", error);
+    status.innerHTML = `<span style="color:red;">❌ Error: ${error.message}</span>`;
   }
 }
 
@@ -65,5 +64,5 @@ function copyLink() {
   const input = document.getElementById("videoLink");
   input.select();
   document.execCommand("copy");
-  alert("Link copied to clipboard!");
+  alert("✅ Link copied to clipboard!");
 }
