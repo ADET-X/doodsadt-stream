@@ -1,87 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Watch on doodsadt</title>
-  <style>
-    body {
-      margin: 0;
-      background: #000;
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
-      text-align: center;
-    }
-
-    .navbar {
-      padding: 16px;
-      background: #111;
-      color: limegreen;
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .container {
-      padding: 30px 20px;
-    }
-
-    video {
-      width: 100%;
-      max-width: 720px;
-      border-radius: 10px;
-      background: #000;
-    }
-
-    .download-btn {
-      display: inline-block;
-      margin-top: 20px;
-      background: limegreen;
-      color: #000;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    .error {
-      margin-top: 30px;
-      color: red;
-      font-size: 18px;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>Video Player</title>
 </head>
 <body>
-
-  <div class="navbar">doodsadt</div>
-
-  <div class="container" id="playerContainer">
-    <div id="errorMessage" class="error"></div>
-  </div>
+  <h2>Video Player</h2>
+  <div id="videoContainer">Loading...</div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
 
     if (!id) {
-      document.getElementById("errorMessage").innerText = "❌ Video ID not found in URL.";
+      document.getElementById("videoContainer").innerText = "❌ Video ID tidak ditemukan.";
     } else {
       const videoSrc = `https://pixeldrain.com/api/file/${id}?download`;
 
-      const video = document.createElement("video");
-      video.src = videoSrc;
-      video.controls = true;
-      video.setAttribute("playsinline", true);
-
-      const downloadBtn = document.createElement("a");
-      downloadBtn.href = videoSrc;
-      downloadBtn.className = "download-btn";
-      downloadBtn.innerText = "⬇ Download Video";
-
-      const container = document.getElementById("playerContainer");
-      container.appendChild(video);
-      container.appendChild(downloadBtn);
+      document.getElementById("videoContainer").innerHTML = `
+        <video width="720" controls autoplay>
+          <source src="${videoSrc}" type="video/mp4">
+        </video>
+      `;
     }
   </script>
-
 </body>
 </html>
