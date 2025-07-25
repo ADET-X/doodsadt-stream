@@ -1,0 +1,23 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Player</title>
+  <style>
+    body { margin: 0; background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    iframe { width: 90vw; height: 90vh; border: none; }
+  </style>
+</head>
+<body>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    if (!id) {
+      document.body.innerHTML = "<p style='color:white'>Video ID tidak ditemukan.</p>";
+    } else {
+      document.write('<iframe src="https://dood.to/e/' + id + '" allowfullscreen></iframe>');
+    }
+  </script>
+</body>
+</html>
