@@ -3,45 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>doodsadt - Watch</title>
+  <title>doodsadt - Paste Link</title>
   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #fff;
-      color: #000;
-    }
-    .navbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 16px;
-      border-bottom: 1px solid #ddd;
-    }
-    .logo {
-      font-weight: bold;
-      font-size: 24px;
-    }
-    .container {
-      text-align: center;
-      padding: 60px 20px;
-    }
-    input[type="text"] {
-      padding: 10px;
-      width: 80%;
-      max-width: 500px;
-      font-size: 16px;
-      margin-bottom: 20px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #444;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+    body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #fff; color: #000; }
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #ddd; }
+    .logo { font-weight: bold; font-size: 24px; }
+    .container { text-align: center; padding: 60px 20px; }
+    input[type="text"] { padding: 10px; font-size: 16px; width: 80%; max-width: 400px; margin-bottom: 20px; }
+    button { padding: 10px 20px; font-size: 16px; background-color: #444; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+    #status { margin-top: 20px; color: #666; }
   </style>
 </head>
 <body>
@@ -49,22 +19,12 @@
     <div class="logo">doodsadt</div>
   </div>
   <div class="container">
-    <h2>Masukkan Link DoodStream</h2>
-    <input type="text" id="doodLink" placeholder="https://dood.to/e/xxxxxxxx" />
+    <h2>Paste Video Link</h2>
+    <input type="text" id="videoLink" placeholder="Paste your DoodStream link here" />
     <br/>
-    <button onclick="goToPlayer()">Tonton</button>
+    <button onclick="processLink()">Play</button>
+    <p id="status"></p>
   </div>
-
-  <script>
-    function goToPlayer() {
-      const link = document.getElementById("doodLink").value;
-      const match = link.match(/\/e\/([a-zA-Z0-9]+)/);
-      if (match && match[1]) {
-        window.location.href = `player.html?video=${match[1]}`;
-      } else {
-        alert("Link tidak valid. Masukkan link seperti https://dood.to/e/xxxxxxxx");
-      }
-    }
-  </script>
+  <script src="upload.js"></script>
 </body>
 </html>
