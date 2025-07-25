@@ -1,79 +1,74 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>doodsadt - Upload Video</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #fff;
-      color: #000;
-    }
-
-    .navbar {
-      text-align: center;
-      background: #111;
-      color: limegreen;
-      padding: 16px;
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .container {
-      text-align: center;
-      padding: 40px 20px;
-    }
-
-    input[type="file"] {
-      padding: 10px;
-      font-size: 16px;
-      margin-bottom: 20px;
-    }
-
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #444;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    #status {
-      margin-top: 30px;
-    }
-
-    video {
-      width: 100%;
-      max-width: 720px;
-      margin-top: 20px;
-      border-radius: 8px;
-    }
-
-    input.link {
-      width: 100%;
-      max-width: 600px;
-      padding: 10px;
-      font-size: 14px;
-      margin-top: 10px;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>Pixeldrain Uploader</title>
 </head>
 <body>
+  <h2>Upload Video ke Pixeldrain</h2>
+  <input type="file" id="videoFile" accept="video/mp4"><br><br>
+  <button onclick="upload()">Upload</button>
+  <div id="status"></div>
 
-  <div class="navbar">doodsadt</div>
+  <script>
+    async function upload() {
+      const fileInput = document.getElementById("videoFile");
+      const status = document.getElementById("status");
+      const file = fileInput.files[0];
 
-  <div class="container">
-    <h2>Upload Video to Pixeldrain</h2>
-    <input type="file" id="videoFile" name="file" accept="video/mp4" />
-    <br/>
-    <button onclick="uploadVideo()">⬆ Upload Video</button>
-    <div id="status"></div>
-  </div>
+      if (!file) {
+        status.innerText = "❗ Pilih file terlebih dahulu.";
+        return;
+      }
 
-  <script src="upload.js"></script>
+      status.innerText = "⏳ Uploading...";
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const apiKey = "d947be7b-4bf6-44d3-8d8a-36f41857bb4a";
+      const authHeader = "Basic " + btoa(":" + apiKey);
+
+      try {
+        const res = await fetch("https://pixeldrain.com/api/file", {
+          method: "POST",
+          headers: {
+            "Authorization": authHeader
+          },
+          body: formData
+        });
+
+        const text = await res.text();
+        console.log("Server response:", text);
+
+        if (!res.ok) {
+          status.innerText = "❌ Gagal upload: " + text;
+          return;
+        }
+
+        const data = JSON.parse(text);
+        if (!data.success) {
+          status.innerText = "❌ Upload gagal: " + (data.message || "Unknown error");
+          return;
+        }
+
+        const fileId = data.id;
+        const url = "https://pixeldrain.com/u/" + fileId;
+        const direct = "https://pixeldrain.com/api/file/" + fileId + "?download";
+
+        status.innerHTML = `
+          ✅ Upload berhasil!<br>
+          <video controls width="600">
+            <source src="${direct}" type="video/mp4">
+          </video><br>
+          Link: <a href="${url}" target="_blank">${url}</a><br>
+          <a href="player.html?id=${fileId}">▶ Tonton via player.html</a>
+        `;
+      } catch (err) {
+        console.error(err);
+        status.innerText = "❌ Terjadi kesalahan: " + err.message;
+      }
+    }
+  </script>
 </body>
 </html>
