@@ -3,43 +3,151 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>doodsadt</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <title>doodsadt - Upload</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Roboto', sans-serif;
-      background: #000;
-      color: #0f0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff;
+      color: #000;
     }
-    h1 {
-      font-size: 2rem;
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid #ddd;
+    }
+    .logo {
+      font-weight: bold;
+      font-size: 24px;
+      color: green;
+    }
+    .nav-buttons a {
+      background: #eee;
+      padding: 6px 14px;
+      border-radius: 16px;
+      margin-left: 8px;
+      text-decoration: none;
+      color: #000;
+      font-size: 14px;
+    }
+    .container {
+      text-align: center;
+      padding: 60px 20px;
+    }
+    input[type="file"] {
+      padding: 10px;
+      font-size: 16px;
       margin-bottom: 20px;
     }
-    a {
-      text-decoration: none;
-      color: #0f0;
-      background: #111;
+    button {
       padding: 10px 20px;
-      border: 1px solid #0f0;
-      border-radius: 5px;
-      margin-top: 10px;
-      transition: all 0.2s ease;
+      font-size: 16px;
+      background-color: #444;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
     }
-    a:hover {
-      background: #0f0;
-      color: #000;
+    #status {
+      margin-top: 30px;
+      color: #222;
+    }
+    #status img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+    input.link {
+      width: 100%;
+      padding: 8px;
+      font-size: 14px;
+      margin-bottom: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>doodsadt</h1>
-  <a href="upload.html">📤 Upload Video</a>
-  <a href="https://doodstream.com" target="_blank">🌐 Doodstream</a>
+
+  <div class="navbar">
+    <div class="logo">doodsadt</div>
+    <div class="nav-buttons">
+      <a href="#">Upload</a>
+      <a href="#">Advertise</a>
+    </div>
+  </div>
+
+  <div class="container">
+    <h2>Upload your video</h2>
+    <input type="file" id="videoFile" accept="video/*" />
+    <br/>
+    <button onclick="uploadVideo()">Upload</button>
+    <div id="status"></div>
+  </div>
+
+  <script>
+    async function uploadVideo() {
+      const fileInput = document.getElementById('videoFile');
+      const status = document.getElementById('status');
+      const file = fileInput.files[0];
+
+      if (!file) {
+        status.innerText = "Please select a video file.";
+        return;
+      }
+
+      status.innerText = "Requesting upload server from DoodStream...";
+
+      const apiKey = "156828q3ebbp4b3gplnz8d";
+
+      // Get upload server
+      const serverRes = await fetch(`https://doodapi.co/api/upload/server?key=${apiKey}`);
+      const serverData = await serverRes.json();
+      if (!serverData.result) {
+        status.innerText = "Failed to get upload server.";
+        return;
+      }
+
+      const uploadUrl = serverData.result + '?' + apiKey;
+
+      // Upload file
+      status.innerText = "Uploading to DoodStream...";
+      const formData = new FormData();
+      formData.append("api_key", apiKey);
+      formData.append("file", file);
+
+      const uploadRes = await fetch(uploadUrl, {
+        method: "POST",
+        body: formData
+      });
+
+      const uploadData = await uploadRes.json();
+      if (!uploadData.result || !uploadData.result[0]) {
+        status.innerText = "Upload failed.";
+        return;
+      }
+
+      const video = uploadData.result[0];
+      const videoCode = video.filecode;
+      const splashImg = video.splash_img || video.single_img;
+      const link = `https://doodsadt.pro/v/?id=${videoCode}`;
+
+      status.innerHTML = `
+        <h3>Upload Complete!</h3>
+        <img src="${splashImg}" alt="Thumbnail">
+        <input class="link" type="text" value="${link}" id="videoLink" readonly>
+        <button onclick="copyLink()">Copy</button>
+        <a href="${link}" target="_blank"><button>Open in Browser</button></a>
+      `;
+    }
+
+    function copyLink() {
+      const input = document.getElementById("videoLink");
+      input.select();
+      document.execCommand("copy");
+      alert("Link copied to clipboard!");
+    }
+  </script>
+
 </body>
 </html>
