@@ -11,27 +11,27 @@
       background: #fff;
       color: #000;
     }
+
     .navbar {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 12px 16px;
-      border-bottom: 1px solid #ddd;
-    }
-    .logo {
-      font-weight: bold;
+      text-align: center;
+      background: #111;
+      color: limegreen;
+      padding: 16px;
       font-size: 24px;
-      color: green;
+      font-weight: bold;
     }
+
     .container {
       text-align: center;
-      padding: 60px 20px;
+      padding: 40px 20px;
     }
+
     input[type="file"] {
       padding: 10px;
       font-size: 16px;
       margin-bottom: 20px;
     }
+
     button {
       padding: 10px 20px;
       font-size: 16px;
@@ -41,34 +41,36 @@
       border-radius: 6px;
       cursor: pointer;
     }
+
     #status {
       margin-top: 30px;
-      color: #222;
     }
-    #status video {
-      max-width: 100%;
-      border-radius: 12px;
-      margin-top: 12px;
+
+    video {
+      width: 100%;
+      max-width: 720px;
+      margin-top: 20px;
+      border-radius: 8px;
     }
+
     input.link {
       width: 100%;
-      padding: 8px;
+      max-width: 600px;
+      padding: 10px;
       font-size: 14px;
-      margin-bottom: 10px;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
 
-  <div class="navbar">
-    <div class="logo">doodsadt</div>
-  </div>
+  <div class="navbar">doodsadt</div>
 
   <div class="container">
     <h2>Upload Video to Pixeldrain</h2>
-    <input type="file" id="videoFile" accept="video/mp4" />
+    <input type="file" id="videoFile" name="file" accept="video/mp4" />
     <br/>
-    <button onclick="uploadVideo()">Upload</button>
+    <button onclick="uploadVideo()">⬆ Upload Video</button>
     <div id="status"></div>
   </div>
 
