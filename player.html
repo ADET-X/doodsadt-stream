@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>doodsadt - Watch</title>
+  <title>Watch on doodsadt</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
       background: #000;
+      font-family: 'Segoe UI', sans-serif;
       color: #fff;
+      text-align: center;
     }
 
     .navbar {
@@ -17,14 +18,14 @@
       justify-content: space-between;
       align-items: center;
       padding: 12px 16px;
+      background: #111;
       border-bottom: 1px solid #333;
-      background-color: #111;
     }
 
     .logo {
       font-weight: bold;
       font-size: 24px;
-      color: lime;
+      color: limegreen;
     }
 
     .nav-buttons a {
@@ -38,26 +39,31 @@
     }
 
     .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
+      padding: 40px 20px;
     }
 
-    iframe {
+    video {
       width: 100%;
       max-width: 720px;
-      height: 405px;
-      border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       background: #000;
     }
 
+    .download-btn {
+      margin-top: 20px;
+      display: inline-block;
+      background: limegreen;
+      color: #000;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
     .error {
-      margin-top: 40px;
+      margin-top: 30px;
       color: red;
-      text-align: center;
-      font-size: 1.2em;
+      font-size: 18px;
     }
   </style>
 </head>
@@ -67,27 +73,37 @@
     <div class="logo">doodsadt</div>
     <div class="nav-buttons">
       <a href="index.html">Home</a>
-      <a href="upload.html">Upload</a>
+      <a href="player.html">Player</a>
     </div>
   </div>
 
   <div class="container" id="playerContainer">
-    <!-- Video iframe akan dimuat di sini -->
+    <div id="errorMessage" class="error"></div>
   </div>
-
-  <div id="errorMessage" class="error"></div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
     const id = params.get("id");
 
     if (!id) {
-      document.getElementById("errorMessage").innerText = "ID video tidak ditemukan.";
+      document.getElementById("errorMessage").innerText = "Video ID tidak ditemukan.";
     } else {
-      const iframe = document.createElement("iframe");
-      iframe.src = `https://dood.to/e/${id}`;
-      iframe.allowFullscreen = true;
-      document.getElementById("playerContainer").appendChild(iframe);
+      const videoSrc = `https://pixeldrain.com/api/file/${id}?download`;
+      const downloadLink = `https://pixeldrain.com/api/file/${id}?download`;
+
+      const video = document.createElement("video");
+      video.src = videoSrc;
+      video.controls = true;
+      video.setAttribute("playsinline", true);
+
+      const downloadBtn = document.createElement("a");
+      downloadBtn.href = downloadLink;
+      downloadBtn.className = "download-btn";
+      downloadBtn.innerText = "⬇ Download Video";
+
+      const container = document.getElementById("playerContainer");
+      container.appendChild(video);
+      container.appendChild(downloadBtn);
     }
   </script>
 
