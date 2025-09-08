@@ -1,59 +1,97 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video Player</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Video Streaming - Player</title>
+  <link rel="stylesheet" href="style.css" />
   <script src="data.js"></script>
 </head>
 <body>
-  <header><a href="index.html">⬅ Kembali</a></header>
-  <main>
-    <div id="video-player"></div>
-    <h2 id="video-title"></h2>
+  <div class="container">
+    <header><a href="index.html" style="color:#fff; text-decoration:none;">⬅ Kembali</a></header>
+    <main>
+      <div id="player-area" style="margin-top:12px;"></div>
+      <h2 id="video-title" style="margin:14px 0 8px;"></h2>
 
-    <section>
-      <h3>Rekomendasi</h3>
-      <div id="recommendations" class="grid"></div>
-    </section>
-  </main>
+      <section>
+        <h3 style="margin:10px 0;">Rekomendasi</h3>
+        <div id="recommendations" class="grid"></div>
+      </section>
+    </main>
+  </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const videoId = params.get("id");
-    const video = videos.find(v => v.id === videoId);
-
-    if (video) {
-      document.getElementById("video-player").innerHTML =
-        `<iframe src="https://doodstream.com/e/${video.id}" frameborder="0" width="100%" height="420" allowfullscreen></iframe>`;
-      document.getElementById("video-title").textContent = video.title;
+  document.addEventListener('DOMContentLoaded', ()=>{
+    if (!window.videos || !Array.isArray(window.videos)){
+      document.getElementById('player-area').innerText = 'Error: data.js tidak ter-load.';
+      return;
     }
 
-    const recEl = document.getElementById("recommendations");
-    videos.filter(v => v.id !== videoId).forEach(v => {
-      const card = document.createElement("div");
-      card.className = "card";
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get('id');
+    const video = videos.find(v => v.id === id);
 
-      const a = document.createElement("a");
+    const playerArea = document.getElementById('player-area');
+    const titleEl = document.getElementById('video-title');
+
+    if (!video){
+      playerArea.innerHTML = '<div style="padding:20px;color:#f88">Video tidak ditemukan.</div>';
+    } else {
+      titleEl.textContent = video.title || '';
+      // responsive iframe wrapper
+      const wrap = document.createElement('div');
+      wrap.style.position = 'relative';
+      wrap.style.width = '100%';
+      wrap.style.paddingTop = '56.25%';
+      wrap.style.background = '#000';
+      wrap.style.borderRadius = '8px';
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://doodstream.com/e/${encodeURIComponent(video.id)}`;
+      iframe.allowFullscreen = true;
+      iframe.style.position = 'absolute';
+      iframe.style.top = '0';
+      iframe.style.left = '0';
+      iframe.style.width = '100%';
+      iframe.style.height = '100%';
+      iframe.style.border = '0';
+      wrap.appendChild(iframe);
+      playerArea.appendChild(wrap);
+
+      // fallback link (in case embed blocked)
+      const openLink = document.createElement('div');
+      openLink.style.marginTop = '8px';
+      openLink.innerHTML = `<a href="https://doodstream.com/e/${encodeURIComponent(video.id)}" target="_blank" rel="noopener" style="color:var(--accent)">Buka di tab baru (jika embed terblokir)</a>`;
+      playerArea.appendChild(openLink);
+    }
+
+    // recommendations
+    const recEl = document.getElementById('recommendations');
+    const thumbHosts = ['https://dsimgcdn.com/splash/', 'https://img.doodcdn.co/splash/'];
+    const placeholder = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#222"/><text x="50%" y="50%" fill="#999" font-size="20" text-anchor="middle">No Preview</text></svg>');
+
+    videos.filter(v => v.id !== id).forEach(v => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      const a = document.createElement('a');
       a.href = `player.html?id=${encodeURIComponent(v.id)}`;
 
-      const img = document.createElement("img");
-      img.src = `https://dsimgcdn.com/splash/${v.id}.jpg`;
-      img.alt = v.title;
-      img.onerror = () => {
-        img.src = "https://via.placeholder.com/320x180?text=No+Preview";
-      };
+      const thumb = document.createElement('div');
+      thumb.className = 'thumb';
+      const img = document.createElement('img');
+      img.alt = v.title || 'thumb';
+      img.src = `${thumbHosts[0]}${v.id}.jpg`;
+      img.onerror = function(){ this.onerror=null; this.src = `${thumbHosts[1]}${v.id}.jpg`; this.onerror = function(){ this.onerror=null; this.src = placeholder; }; };
+      const dur = document.createElement('span'); dur.className = 'duration'; dur.textContent = v.duration || '';
+      thumb.appendChild(img); thumb.appendChild(dur);
 
-      const info = document.createElement("div");
-      info.className = "info";
-      info.innerHTML = `<h3>${v.title}</h3><span>${v.duration}</span>`;
+      const meta = document.createElement('div'); meta.className='meta';
+      meta.innerHTML = `<div class="title">${v.title}</div>`;
 
-      a.appendChild(img);
-      a.appendChild(info);
-      card.appendChild(a);
-      recEl.appendChild(card);
+      a.appendChild(thumb); a.appendChild(meta); card.appendChild(a); recEl.appendChild(card);
     });
+
+  });
   </script>
 </body>
 </html>
