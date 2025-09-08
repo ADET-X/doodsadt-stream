@@ -1,42 +1,36 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video Streaming</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="data.js"></script>
-</head>
-<body>
-  <header><h1>Video Streaming</h1></header>
-  <main id="video-list" class="grid"></main>
+<script>
+  const listEl = document.getElementById("video-list");
 
-  <script>
-    const listEl = document.getElementById("video-list");
+  videos.forEach(video => {
+    const card = document.createElement("div");
+    card.className = "card";
 
-    videos.forEach(video => {
-      const card = document.createElement("div");
-      card.className = "card";
+    const a = document.createElement("a");
+    a.href = `player.html?id=${encodeURIComponent(video.id)}`;
 
-      const a = document.createElement("a");
-      a.href = `player.html?id=${encodeURIComponent(video.id)}`;
+    const thumbWrapper = document.createElement("div");
+    thumbWrapper.className = "thumb-wrapper";
 
-      const img = document.createElement("img");
-      img.src = `https://dsimgcdn.com/splash/${video.id}.jpg`;
-      img.alt = video.title;
-      img.onerror = () => {
-        img.src = "https://via.placeholder.com/320x180?text=No+Preview";
-      };
+    const img = document.createElement("img");
+    img.src = video.thumbnail;
+    img.alt = video.title;
+    img.onerror = () => {
+      img.src = "https://via.placeholder.com/320x180?text=No+Preview";
+    };
 
-      const info = document.createElement("div");
-      info.className = "info";
-      info.innerHTML = `<h3>${video.title}</h3><span>${video.duration}</span>`;
+    const duration = document.createElement("span");
+    duration.className = "duration";
+    duration.textContent = video.duration;
 
-      a.appendChild(img);
-      a.appendChild(info);
-      card.appendChild(a);
-      listEl.appendChild(card);
-    });
-  </script>
-</body>
-</html>
+    thumbWrapper.appendChild(img);
+    thumbWrapper.appendChild(duration);
+
+    const title = document.createElement("h3");
+    title.textContent = video.title;
+
+    a.appendChild(thumbWrapper);
+    a.appendChild(title);
+    card.appendChild(a);
+    listEl.appendChild(card);
+  });
+</script>
