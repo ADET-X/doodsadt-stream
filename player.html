@@ -1,20 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Player</title>
+  <title>Video Player</title>
   <link rel="stylesheet" href="style.css">
   <script src="data.js"></script>
 </head>
 <body>
-  <header>
-    <a href="index.html">⬅ Kembali</a>
-  </header>
-
+  <header><a href="index.html">⬅ Kembali</a></header>
   <main>
     <div id="video-player"></div>
     <h2 id="video-title"></h2>
+
     <section>
       <h3>Rekomendasi</h3>
       <div id="recommendations" class="grid"></div>
@@ -24,30 +22,37 @@
   <script>
     const params = new URLSearchParams(window.location.search);
     const videoId = params.get("id");
-
     const video = videos.find(v => v.id === videoId);
+
     if (video) {
-      document.getElementById("video-player").innerHTML = `
-        <iframe src="https://doodstream.com/e/${video.id}" 
-          frameborder="0" width="100%" height="400" allowfullscreen></iframe>
-      `;
+      document.getElementById("video-player").innerHTML =
+        `<iframe src="https://doodstream.com/e/${video.id}" frameborder="0" width="100%" height="420" allowfullscreen></iframe>`;
       document.getElementById("video-title").textContent = video.title;
     }
 
     const recEl = document.getElementById("recommendations");
     videos.filter(v => v.id !== videoId).forEach(v => {
-      const item = document.createElement("div");
-      item.className = "card";
-      item.innerHTML = `
-        <a href="player.html?id=${v.id}">
-          <img src="https://dsimgcdn.com/splash/${v.id}.jpg" alt="${v.title}">
-          <div class="info">
-            <h3>${v.title}</h3>
-            <span>${v.duration}</span>
-          </div>
-        </a>
-      `;
-      recEl.appendChild(item);
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const a = document.createElement("a");
+      a.href = `player.html?id=${encodeURIComponent(v.id)}`;
+
+      const img = document.createElement("img");
+      img.src = `https://dsimgcdn.com/splash/${v.id}.jpg`;
+      img.alt = v.title;
+      img.onerror = () => {
+        img.src = "https://via.placeholder.com/320x180?text=No+Preview";
+      };
+
+      const info = document.createElement("div");
+      info.className = "info";
+      info.innerHTML = `<h3>${v.title}</h3><span>${v.duration}</span>`;
+
+      a.appendChild(img);
+      a.appendChild(info);
+      card.appendChild(a);
+      recEl.appendChild(card);
     });
   </script>
 </body>
