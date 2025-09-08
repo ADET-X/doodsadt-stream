@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,28 +8,34 @@
   <script src="data.js"></script>
 </head>
 <body>
-  <header>
-    <h1>Video Streaming</h1>
-  </header>
-
+  <header><h1>Video Streaming</h1></header>
   <main id="video-list" class="grid"></main>
 
   <script>
     const listEl = document.getElementById("video-list");
 
     videos.forEach(video => {
-      const item = document.createElement("div");
-      item.className = "card";
-      item.innerHTML = `
-        <a href="player.html?id=${video.id}">
-          <img src="https://dsimgcdn.com/splash/${video.id}.jpg" alt="${video.title}">
-          <div class="info">
-            <h3>${video.title}</h3>
-            <span>${video.duration}</span>
-          </div>
-        </a>
-      `;
-      listEl.appendChild(item);
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const a = document.createElement("a");
+      a.href = `player.html?id=${encodeURIComponent(video.id)}`;
+
+      const img = document.createElement("img");
+      img.src = `https://dsimgcdn.com/splash/${video.id}.jpg`;
+      img.alt = video.title;
+      img.onerror = () => {
+        img.src = "https://via.placeholder.com/320x180?text=No+Preview";
+      };
+
+      const info = document.createElement("div");
+      info.className = "info";
+      info.innerHTML = `<h3>${video.title}</h3><span>${video.duration}</span>`;
+
+      a.appendChild(img);
+      a.appendChild(info);
+      card.appendChild(a);
+      listEl.appendChild(card);
     });
   </script>
 </body>
