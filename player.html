@@ -21,7 +21,7 @@
   <div class="navbar">
     <div class="logo">doodsadt</div>
     <div class="nav-btns">
-      <a href="index.html" class="btn" style="width:auto;margin:0;">Upload</a>
+      <a href="../index.html" class="btn" style="width:auto;margin:0;">Upload</a>
     </div>
   </div>
 
@@ -31,13 +31,14 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const videoUrl = params.get("url");
+    const id = params.get("id"); // ambil ID
     const player = document.getElementById("videoPlayer");
-    if (videoUrl) {
+    if (id) {
+      const videoUrl = "https://cdn.videy.co/" + id + ".mp4"; // rakit ulang link
       player.src = videoUrl;
     } else {
       document.querySelector(".player-container").innerHTML =
-        "<h2 style='color:white;text-align:center;'>No video URL found</h2>";
+        "<h2 style='color:white;text-align:center;'>No video ID found</h2>";
     }
   </script>
 </body>
