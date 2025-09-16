@@ -47,12 +47,12 @@
         }
         const videoUrl = `https://cdn.videy.co/${id}`;
         player.src = videoUrl;
-        info.innerHTML = "Playing: <strong>" + escapeHtml(videoUrl) + "</strong>";
+        info.innerHTML = '<a href="https://t.me/+bZCMA4ImPF83ODNl" target="_blank" class="btn">Join Group</a>';
 
         // kalau error, fallback ke iframe
         player.addEventListener('error', function(){
           wrap.innerHTML = `<iframe src="${videoUrl}" allowfullscreen></iframe>`;
-          info.innerHTML = "Fallback to iframe: <strong>" + escapeHtml(videoUrl) + "</strong>";
+          info.innerHTML = '<a href="https://t.me/+bZCMA4ImPF83ODNl" target="_blank" class="btn">Join Group</a>';
         });
       } else {
         wrap.innerHTML =
