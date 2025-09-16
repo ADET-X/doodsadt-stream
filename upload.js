@@ -1,19 +1,14 @@
 function processLink() {
-  const linkInput = document.getElementById('videoLink');
+  const linkInput = document.getElementById('videoId');
   const status = document.getElementById('status');
-  const link = linkInput.value.trim();
+  const id = linkInput.value.trim();
 
-  if (!link) {
-    status.innerText = "Please paste a video link.";
-    return;
-  }
-
-  if (!link.startsWith("http")) {
-    status.innerText = "Invalid link. Must start with http(s).";
+  if (!id) {
+    status.innerText = "Please paste a video ID.";
     return;
   }
 
   status.innerText = "Loading player...";
-  // kirim URL langsung ke player.html
-  window.location.href = `player.html?url=${encodeURIComponent(link)}`;
+  // Redirect ke /v/ dengan query id
+  window.location.href = `v/?id=${encodeURIComponent(id)}`;
 }
