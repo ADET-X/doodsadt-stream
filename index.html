@@ -21,11 +21,32 @@
   </div>
   <div class="container">
     <h2>Paste Video ID</h2>
-    <input type="text" id="videoId" placeholder="Contoh: 0T84USm21.mp4" />
+    <input type="text" id="videoId" placeholder="Contoh: 0T84USm21" />
     <br/>
     <button id="playBtn">Play</button>
     <p id="status"></p>
   </div>
-  <script src="upload.js"></script>
+
+  <script>
+    document.getElementById('playBtn').addEventListener('click', function() {
+      const linkInput = document.getElementById('videoId');
+      const status = document.getElementById('status');
+      let id = linkInput.value.trim();
+
+      if (!id) {
+        status.innerText = "Please paste a video ID.";
+        return;
+      }
+
+      // Tambahkan .mp4 kalau belum ada
+      if (!id.endsWith(".mp4")) {
+        id += ".mp4";
+      }
+
+      status.innerText = "Loading player...";
+      // Redirect ke player
+      window.location.href = `v/?id=${encodeURIComponent(id)}`;
+    });
+  </script>
 </body>
 </html>
