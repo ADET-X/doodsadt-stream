@@ -1,71 +1,148 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Watch on doodsadt</title>
-  <style>
-    body { margin: 0; font-family: Arial, sans-serif; background: #fff; color: #000; }
-    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #ddd; }
-    .navbar .logo { font-weight: bold; font-size: 22px; }
-    .player-container { width: 100%; height: 60vh; background: #000; display: flex; align-items: center; justify-content: center; }
-    video, iframe { width: 100%; height: 100%; background: #000; border: none; }
-    .btn { display: block; width: 200px; margin: 20px auto; padding: 10px; background: #444; color: #fff; text-align: center; text-decoration: none; border-radius: 6px; font-size: 16px; }
-    .btn:hover { background: #222; }
-    .info { text-align:center; padding: 12px; color:#444; }
-    @media (max-width: 768px) {
-      .player-container { height: 40vh; }
-    }
-  </style>
-  
-  <script src="https://biteanxiously.com/77/33/2d/77332d0ff403f429ea264fa9f3e1c873.js"></script>
-  
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Watch on doodsadt</title>
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+/* PLAYER FULL LAYAR */
+.player-container {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #000;
+}
+
+video, iframe {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+  border: none;
+}
+
+/* AGE GATE */
+.gate {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.gate-box {
+  text-align: center;
+  color: #fff;
+  max-width: 320px;
+  padding: 20px;
+}
+
+.gate-box h2 {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.gate-box p {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.gate-btn {
+  display: block;
+  margin-top: 14px;
+  padding: 14px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+.agree {
+  background: #1e90ff;
+  color: #fff;
+}
+
+.exit {
+  background: #444;
+  color: #fff;
+}
+</style>
 </head>
+
 <body>
-  <div class="navbar">
-    <div class="logo">doodsadt</div>
-    <div class="nav-btns">
-      <a href="../index.html" class="btn" style="width:auto;margin:0;">Upload</a>
-    </div>
+
+<!-- PLAYER -->
+<div class="player-container" id="playerWrap">
+  <video id="videoPlayer" controls playsinline></video>
+</div>
+
+<!-- AGE GATE -->
+<div class="gate" id="ageGate">
+  <div class="gate-box">
+    <h2>🔞 Apakah Anda sudah 18+?</h2>
+    <p>Konten ini hanya untuk pengguna dewasa</p>
+
+    <a href="#" class="gate-btn agree" id="agreeBtn">Saya Setuju</a>
+    <a href="#" class="gate-btn exit" id="exitBtn">Keluar</a>
   </div>
+</div>
 
-  <div class="player-container" id="playerWrap">
-    <video id="videoPlayer" controls autoplay playsinline></video>
-  </div>
+<script>
+(function(){
+  const REDIRECT_URL = "https://biteanxiously.com/mw1hyfqyv?key=09409c2256c55cc0edbdfd9a8c3e242c";
 
-  <div class="info" id="infoText"></div>
-  <!-- tombol tambahan -->
-  <a href="https://biteanxiously.com/dexkf1bn?key=e529eb6e293469b1258989555dedc117" target="_blank" class="btn">🥵🥵🥵</a>
+  const params = new URLSearchParams(window.location.search);
+  let id = params.get("id");
 
-  <script>
-    (function(){
-      const params = new URLSearchParams(window.location.search);
-      let id = params.get("id"); 
-      const player = document.getElementById("videoPlayer");
-      const wrap = document.getElementById("playerWrap");
-      const info = document.getElementById("infoText");
+  const player = document.getElementById("videoPlayer");
+  const wrap = document.getElementById("playerWrap");
+  const gate = document.getElementById("ageGate");
 
-      if (id) {
-        if (!id.endsWith(".mp4")) {
-          id += ".mp4";
-        }
-        const videoUrl = `https://cdn.videy.co/${id}`;
-        player.src = videoUrl;
-        info.innerHTML = '<a href="https://t.me/+q9m6olHeqv81MTM1" target="_blank" class="btn">Join Group</a>';
+  const agreeBtn = document.getElementById("agreeBtn");
+  const exitBtn  = document.getElementById("exitBtn");
 
-        // kalau error, fallback ke iframe
-        player.addEventListener('error', function(){
-          wrap.innerHTML = `<iframe src="${videoUrl}" allowfullscreen></iframe>`;
-          info.innerHTML = '<a href="https://t.me/+q9m6olHeqv81MTM1" target="_blank" class="btn">Join Group</a>';
-        });
-      } else {
-        wrap.innerHTML =
-          "<h2 style='color:white;text-align:center;'>No video ID found</h2>";
-      }
-    })();
-  </script>
-  
-  <script src="https://biteanxiously.com/9d/57/af/9d57af6c0e99a9a74ef63b1eb4b0fc95.js"></script>
-  
+  // === LOAD VIDEO ===
+  if (id) {
+    if (!id.endsWith(".mp4")) id += ".mp4";
+    const videoUrl = `https://cdn.videy.co/${id}`;
+    player.src = videoUrl;
+
+    // fallback iframe
+    player.addEventListener("error", () => {
+      wrap.innerHTML = `<iframe src="${videoUrl}" allowfullscreen></iframe>`;
+    });
+  } else {
+    wrap.innerHTML = "<h2 style='color:white;text-align:center;'>No video ID</h2>";
+  }
+
+  // === GATE SELALU MUNCUL SETIAP VIDEO ===
+  gate.style.display = "flex";
+  player.pause();
+
+  // === KEDUA TOMBOL TETAP REDIRECT ===
+  function redirectOut(e){
+    e.preventDefault();
+    window.location.href = REDIRECT_URL;
+  }
+
+  agreeBtn.addEventListener("click", redirectOut);
+  exitBtn.addEventListener("click", redirectOut);
+
+})();
+</script>
+
 </body>
 </html>
