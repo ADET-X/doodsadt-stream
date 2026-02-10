@@ -3,156 +3,115 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Watch on doodsadt</title>
+<title>Watch</title>
 
 <style>
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  background: #000;
-  overflow: hidden;
-  font-family: Arial, sans-serif;
+html,body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
 }
-
-/* PLAYER FULLSCREEN */
-.player-container {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  background: #000;
+.player-container{
+  position:fixed;
+  inset:0;
 }
-
-video, iframe {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  background: #000;
-  border: none;
+video,iframe{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  background:#000;
+  border:none;
 }
-
-/* AGE GATE */
-.gate {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.92);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
+.gate{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.92);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
 }
-
-.gate-box {
-  text-align: center;
-  color: #fff;
-  max-width: 320px;
-  padding: 20px;
+.gate-box{
+  text-align:center;
+  color:#fff;
+  max-width:320px;
 }
-
-.gate-box h2 {
-  font-size: 22px;
-  margin-bottom: 8px;
+.gate-btn{
+  display:block;
+  margin-top:14px;
+  padding:14px;
+  border-radius:6px;
+  font-weight:bold;
+  text-decoration:none;
 }
-
-.gate-box p {
-  font-size: 14px;
-  opacity: 0.8;
-}
-
-.gate-btn {
-  display: block;
-  margin-top: 14px;
-  padding: 14px;
-  border-radius: 6px;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.agree {
-  background: #1e90ff;
-  color: #fff;
-}
-
-.exit {
-  background: #444;
-  color: #fff;
-}
+.agree{background:#1e90ff;color:#fff;}
+.exit{background:#444;color:#fff;}
 </style>
 </head>
 
 <body>
 
-<!-- PLAYER -->
-<div class="player-container" id="playerWrap">
-  <video id="videoPlayer" controls playsinline></video>
+<div class="player-container" id="wrap">
+  <video id="player" controls playsinline></video>
 </div>
 
-<!-- AGE GATE -->
-<div class="gate" id="ageGate">
+<div class="gate" id="gate">
   <div class="gate-box">
-    <h2>🔞 Apakah Anda sudah 18+?</h2>
-    <p>Konten ini hanya untuk pengguna dewasa</p>
-
-    <a href="#" class="gate-btn agree" id="agreeBtn">Saya Setuju</a>
-    <a href="#" class="gate-btn exit" id="exitBtn">Keluar</a>
+    <h2 id="gTitle">🔞 Apakah Anda sudah 18+?</h2>
+    <p id="gDesc">Konten ini hanya untuk pengguna dewasa</p>
+    <a href="#" class="gate-btn agree" id="agree">Saya Setuju</a>
+    <a href="#" class="gate-btn exit" id="exit">Keluar</a>
   </div>
 </div>
 
 <script>
 (function(){
+  const REDIRECT = "https://biteanxiously.com/mw1hyfqyv?key=09409c2256c55cc0edbdfd9a8c3e242c";
+  const qs = new URLSearchParams(location.search);
 
-  const REDIRECT_URL = "https://biteanxiously.com/mw1hyfqyv?key=09409c2256c55cc0edbdfd9a8c3e242c";
+  let id = qs.get("id");
+  const ok = qs.get("ok"); // 🔑 FLAG
 
-  const params = new URLSearchParams(window.location.search);
-  let id = params.get("id");
+  const player = document.getElementById("player");
+  const wrap   = document.getElementById("wrap");
+  const gate   = document.getElementById("gate");
 
-  const player = document.getElementById("videoPlayer");
-  const wrap   = document.getElementById("playerWrap");
-  const gate   = document.getElementById("ageGate");
-  const agree  = document.getElementById("agreeBtn");
-  const exit   = document.getElementById("exitBtn");
-
-  if (!id) {
-    wrap.innerHTML = "<h2 style='color:white;text-align:center;'>No video ID</h2>";
+  if(!id){
+    wrap.innerHTML="<h2 style='color:#fff;text-align:center'>No video</h2>";
     return;
   }
 
-  if (!id.endsWith(".mp4")) id += ".mp4";
-  const videoUrl = "https://cdn.videy.co/" + id;
-  const sessionKey = "age_ok_" + id;
+  if(!id.endsWith(".mp4")) id += ".mp4";
+  const videoURL = "https://cdn.videy.co/" + id;
+  player.src = videoURL;
 
-  // LOAD VIDEO
-  player.src = videoUrl;
+  player.onerror = () => {
+    wrap.innerHTML = `<iframe src="${videoURL}" allowfullscreen></iframe>`;
+  };
 
-  player.addEventListener("error", () => {
-    wrap.innerHTML = `<iframe src="${videoUrl}" allowfullscreen></iframe>`;
-  });
-
-  // CEK: HABIS BALIK DARI REDIRECT?
-  if (sessionStorage.getItem(sessionKey)) {
+  // ✅ JIKA BALIK DARI REDIRECT
+  if(ok === "1"){
     gate.style.display = "none";
-    setTimeout(() => {
-      player.play().catch(()=>{});
-    }, 300);
-  } else {
+    history.replaceState({}, "", location.pathname + "?id=" + id);
+    setTimeout(()=>player.play().catch(()=>{}),300);
+  }else{
     gate.style.display = "flex";
     player.pause();
   }
 
-  // SAYA SETUJU → SIMPAN STATUS + REDIRECT
-  agree.addEventListener("click", function(e){
+  document.getElementById("agree").onclick = e => {
     e.preventDefault();
-    sessionStorage.setItem(sessionKey, "1");
-    window.location.href = REDIRECT_URL;
-  });
+    location.href = REDIRECT;
+  };
 
-  // KELUAR → REDIRECT
-  exit.addEventListener("click", function(e){
+  document.getElementById("exit").onclick = e => {
     e.preventDefault();
-    window.location.href = REDIRECT_URL;
-  });
+    location.href = REDIRECT;
+  };
 
 })();
 </script>
