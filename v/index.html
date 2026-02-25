@@ -49,21 +49,4 @@ video {
 </script>
 
 </body>
-</html>(function(){
-  const params = new URLSearchParams(location.search);
-  let id = params.get("id");
-  if(!id) return;
-
-  if(!id.endsWith(".mp4")) id += ".mp4";
-
-  const video = document.getElementById("video");
-
-  video.src = "https://cdn.videy.co/" + id;
-
-  video.muted = true;
-  video.play().catch(()=>{});
-})();
-</script>
-
-</body>
 </html>
