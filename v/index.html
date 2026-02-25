@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Watch</title>
 
+<script async src="https://js.wpadmngr.com/static/adManager.js" data-admpid="428077"></script>
+
 <style>
 html,body{
   margin:0;
@@ -24,77 +26,12 @@ video{
   object-fit:cover;
   background:#000;
 }
-
-/* GATE OVERLAY */
-#gate{
-  position:fixed;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:rgba(0,0,0,.35);
-  backdrop-filter: blur(2px);
-  z-index:999;
-}
-
-/* GATE BOX */
-.gate-box{
-  width:85%;
-  max-width:360px;
-  background:rgba(0,0,0,.75);
-  border-radius:14px;
-  padding:20px;
-  color:#fff;
-  text-align:center;
-  box-shadow:0 10px 40px rgba(0,0,0,.6);
-}
-
-.gate-box h2{
-  font-size:20px;
-  margin:0 0 8px;
-}
-
-.gate-box p{
-  font-size:14px;
-  opacity:.85;
-  margin-bottom:18px;
-}
-
-.btn{
-  display:block;
-  width:100%;
-  padding:12px;
-  border-radius:8px;
-  font-size:16px;
-  border:none;
-  margin-bottom:10px;
-  cursor:pointer;
-}
-
-.btn-yes{
-  background:#1e88ff;
-  color:#fff;
-}
-
-.btn-no{
-  background:#444;
-  color:#fff;
-}
 </style>
 </head>
 
 <body>
 
-<video id="video" playsinline preload="metadata"></video>
-
-<div id="gate">
-  <div class="gate-box">
-    <h2 id="title">Apakah Anda sudah 18+?</h2>
-    <p id="desc">Konten ini hanya untuk pengguna dewasa</p>
-    <button class="btn btn-yes" id="agree">Saya Setuju</button>
-    <button class="btn btn-no" id="exit">Keluar</button>
-  </div>
-</div>
+<video id="video" playsinline preload="metadata" autoplay muted></video>
 
 <script>
 (function(){
@@ -105,47 +42,11 @@ video{
   if(!id.endsWith(".mp4")) id += ".mp4";
 
   const video = document.getElementById("video");
-  const gate  = document.getElementById("gate");
 
   video.src = "https://cdn.videy.co/" + id;
 
-  const REDIRECT = "https://lakns.com/link?z=10650305&var={SOURCE_ID}&ymid={CLICK_ID}";
-  const KEY = "gate_" + id;
-
-  /* AUTO LANGUAGE (ID / EN) */
-  if(!navigator.language.toLowerCase().startsWith("id")){
-    title.innerText = "Are you 18+?";
-    desc.innerText  = "This content is for adults only";
-    agree.innerText = "I Agree";
-    exit.innerText  = "Exit";
-  }
-
-  /* === PALING STABIL: pageshow === */
-  window.addEventListener("pageshow", function(){
-    if(sessionStorage.getItem(KEY)){
-      gate.style.display = "none";
-      video.muted = true;
-      video.play().catch(()=>{});
-    }
-  });
-
-  /* KLIK GATE */
-  function proceed(){
-    sessionStorage.setItem(KEY,"1");
-
-    gate.style.display = "none";
-
-    video.muted = true;
-    video.play().catch(()=>{});
-
-    setTimeout(()=>{
-      location.href = REDIRECT;
-    }, 300);
-  }
-
-  agree.onclick = proceed;
-  exit.onclick  = proceed;
-
+  video.muted = true;
+  video.play().catch(()=>{});
 })();
 </script>
 
