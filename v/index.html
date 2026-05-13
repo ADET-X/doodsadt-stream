@@ -13,6 +13,7 @@ width:100%;
 height:100%;
 background:#000;
 overflow:hidden;
+font-family:sans-serif;
 }
 
 video{
@@ -38,17 +39,19 @@ display:none!important;
 /* fake play */
 .play{
 position:fixed;
-top:47%;
+top:50%;
 left:50%;
 transform:translate(-50%,-50%);
-width:68px;
-height:68px;
-background:rgba(255,255,255,.78);
+width:74px;
+height:74px;
+background:rgba(255,255,255,.82);
 border-radius:50%;
 cursor:pointer;
 z-index:9999;
 mix-blend-mode:screen;
-opacity:.92;
+opacity:.95;
+transition:.25s;
+backdrop-filter:blur(3px);
 }
 
 .play:before{
@@ -57,9 +60,16 @@ position:absolute;
 top:50%;
 left:54%;
 transform:translate(-50%,-50%);
-border-left:18px solid rgba(0,0,0,.72);
-border-top:11px solid transparent;
-border-bottom:11px solid transparent;
+border-left:20px solid rgba(0,0,0,.78);
+border-top:12px solid transparent;
+border-bottom:12px solid transparent;
+}
+
+/* efek klik */
+.play.hide{
+opacity:0;
+transform:translate(-50%,-50%) scale(.7);
+pointer-events:none;
 }
 </style>
 </head>
@@ -96,13 +106,13 @@ id += ".mp4";
 video.src = "https://cdn.videy.co/" + id;
 video.load();
 
-/* key unik tiap link/video */
+/* key unik */
 const redirectKey = "played_" + id;
 
-/* kalau sudah pernah klik */
+/* jika sudah pernah klik */
 if(localStorage.getItem(redirectKey)){
 
-/* hilangkan fake play */
+/* hapus fake play */
 playBtn.remove();
 
 /* tampilkan controls */
@@ -115,7 +125,7 @@ try{
 await video.play();
 }catch(e){}
 
-/* aktifkan suara lagi */
+/* aktifkan suara */
 video.muted = false;
 
 });
@@ -126,11 +136,16 @@ return;
 /* klik fake play */
 playBtn.onclick = ()=>{
 
-/* simpan bahwa link ini sudah pernah diklik */
+/* animasi hilang */
+playBtn.classList.add("hide");
+
+/* simpan status */
 localStorage.setItem(redirectKey,"1");
 
-/* redirect */
-location.href = "https://s.shopee.co.id/1LcZ6uwPay";
+/* redirect setelah animasi */
+setTimeout(()=>{
+location.href = "https://websitekamu.com";
+},250);
 
 };
 
