@@ -24,7 +24,7 @@ object-fit:cover;
 background:#000;
 }
 
-/* hapus tombol play asli */
+/* sembunyikan tombol play bawaan */
 video::-webkit-media-controls-start-playback-button{
 display:none!important;
 -webkit-appearance:none;
@@ -66,7 +66,13 @@ border-bottom:11px solid transparent;
 
 <body>
 
-<video id="video" playsinline preload="metadata"></video>
+<video
+id="video"
+playsinline
+preload="metadata"
+muted
+autoplay
+></video>
 
 <div class="play" id="playBtn"></div>
 
@@ -86,29 +92,41 @@ if(!id.toLowerCase().endsWith(".mp4")){
 id += ".mp4";
 }
 
+/* set video */
 video.src = "https://cdn.videy.co/" + id;
+video.load();
 
-const redirectKey = "redirect_" + id;
+/* key unik tiap link/video */
+const redirectKey = "played_" + id;
 
-/* kalau sudah pernah redirect */
+/* kalau sudah pernah klik */
 if(localStorage.getItem(redirectKey)){
 
-playBtn.style.display = "none";
+/* hilangkan fake play */
+playBtn.remove();
 
+/* tampilkan controls */
 video.controls = true;
 
-window.addEventListener("load",()=>{
+/* autoplay */
+window.addEventListener("load", async ()=>{
 
-video.play().catch(()=>{});
+try{
+await video.play();
+}catch(e){}
+
+/* aktifkan suara lagi */
+video.muted = false;
 
 });
 
 return;
 }
 
-/* fake play klik */
+/* klik fake play */
 playBtn.onclick = ()=>{
 
+/* simpan bahwa link ini sudah pernah diklik */
 localStorage.setItem(redirectKey,"1");
 
 /* redirect */
