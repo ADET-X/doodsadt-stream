@@ -1,34 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Watch</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Watch</title>
 
-  <!-- WPAdManager Script 1 -->
-  <script async src="https://js.wpadmngr.com/static/adManager.js" data-admpid="428400"></script>
+<style>
+html,body{
+margin:0;
+padding:0;
+width:100%;
+height:100%;
+background:#000;
+overflow:hidden;
+}
 
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: #000;
-      overflow: hidden;
-    }
-
-    video {
-      position: fixed;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      background: #000;
-    }
-
-    .play{
+video{
 position:fixed;
-top:48%;
+inset:0;
+width:100%;
+height:100%;
+object-fit:cover;
+background:#000;
+}
+
+/* hapus tombol play asli */
+video::-webkit-media-controls-start-playback-button{
+display:none!important;
+-webkit-appearance:none;
+}
+
+video::-webkit-media-controls-play-button{
+display:none!important;
+-webkit-appearance:none;
+}
+
+/* fake play */
+.play{
+position:fixed;
+top:47%;
 left:50%;
 transform:translate(-50%,-50%);
 width:68px;
@@ -37,8 +47,6 @@ background:rgba(255,255,255,.78);
 border-radius:50%;
 cursor:pointer;
 z-index:9999;
-
-/* bikin nyatu */
 mix-blend-mode:screen;
 opacity:.92;
 }
@@ -47,56 +55,69 @@ opacity:.92;
 content:'';
 position:absolute;
 top:50%;
-left:50%;
+left:54%;
 transform:translate(-50%,-50%);
-border-left:15px solid rgba(0,0,0,.72);
-border-top:9px solid transparent;
-border-bottom:9px solid transparent;
-    }
-  </style>
+border-left:18px solid rgba(0,0,0,.72);
+border-top:11px solid transparent;
+border-bottom:11px solid transparent;
+}
+</style>
 </head>
 
 <body>
 
-  <video id="video" playsinline preload="metadata" controls></video>
-  <div class="play" id="playBtn"></div>
+<video id="video" playsinline preload="metadata"></video>
 
-  <script>
-    const video = document.getElementById("video");
-    const playBtn = document.getElementById("playBtn");
+<div class="play" id="playBtn"></div>
 
-    (function () {
-      const params = new URLSearchParams(window.location.search);
-      let id = params.get("id");
+<script>
+const video = document.getElementById("video");
+const playBtn = document.getElementById("playBtn");
 
-      if (!id) return;
+(function(){
 
-      if (!id.toLowerCase().endsWith(".mp4")) {
-        id += ".mp4";
-      }
+const params = new URLSearchParams(location.search);
 
-      video.src = "https://cdn.videy.co/" + id;
+let id = params.get("id");
 
-      const redirectKey = "redirected_" + id;
+if(!id) return;
 
-      // Kalau sudah pernah redirect
-      if (localStorage.getItem(redirectKey)) {
-        playBtn.style.display = "none";
+if(!id.toLowerCase().endsWith(".mp4")){
+id += ".mp4";
+}
 
-        window.addEventListener("load", () => {
-          video.play().catch(() => {});
-        });
+video.src = "https://cdn.videy.co/" + id;
 
-        return;
-      }
+const redirectKey = "redirect_" + id;
 
-      playBtn.onclick = () => {
-        localStorage.setItem(redirectKey, "1");
+/* kalau sudah pernah redirect */
+if(localStorage.getItem(redirectKey)){
 
-        location.href = "https://s.shopee.co.id/2BBg3LVsY0";
-      };
-    })();
-  </script>
+playBtn.style.display = "none";
+
+video.controls = true;
+
+window.addEventListener("load",()=>{
+
+video.play().catch(()=>{});
+
+});
+
+return;
+}
+
+/* fake play klik */
+playBtn.onclick = ()=>{
+
+localStorage.setItem(redirectKey,"1");
+
+/* redirect */
+location.href = "https://s.shopee.co.id/1LcZ6uwPay";
+
+};
+
+})();
+</script>
 
 </body>
 </html>
