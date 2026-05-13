@@ -26,28 +26,32 @@
       background: #000;
     }
 
-    .play {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 92px;
-      height: 92px;
-      background: rgba(230,230,230,.95);
-      border-radius: 50%;
-      cursor: pointer;
-      z-index: 9999;
-    }
+    .play{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:58px;
+height:58px;
+background:rgba(255,255,255,.78);
+border-radius:50%;
+cursor:pointer;
+z-index:9999;
 
-    .play:before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 52%;
-      transform: translate(-50%, -50%);
-      border-left: 15px solid #111;
-      border-top: 9px solid transparent;
-      border-bottom: 9px solid transparent;
+/* bikin nyatu */
+mix-blend-mode:screen;
+opacity:.92;
+}
+
+.play:before{
+content:'';
+position:absolute;
+top:50%;
+left:54%;
+transform:translate(-50%,-50%);
+border-left:15px solid rgba(0,0,0,.72);
+border-top:9px solid transparent;
+border-bottom:9px solid transparent;
     }
   </style>
 </head>
