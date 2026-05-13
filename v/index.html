@@ -13,7 +13,6 @@ width:100%;
 height:100%;
 background:#000;
 overflow:hidden;
-font-family:sans-serif;
 }
 
 video{
@@ -25,38 +24,37 @@ object-fit:cover;
 background:#000;
 }
 
-/* fake play */
+/* fake play pas di tengah video */
 .play{
 position:fixed;
 top:50%;
 left:50%;
 transform:translate(-50%,-50%);
-width:74px;
-height:74px;
-background:rgba(255,255,255,.82);
+width:72px;
+height:72px;
 border-radius:50%;
+background:rgba(255,255,255,.85);
 cursor:pointer;
 z-index:9999;
-opacity:.95;
-transition:.25s;
-backdrop-filter:blur(3px);
+transition:.2s;
 }
 
+/* icon segitiga */
 .play:before{
-content:'';
+content:"";
 position:absolute;
 top:50%;
-left:54%;
+left:53%;
 transform:translate(-50%,-50%);
-border-left:20px solid rgba(0,0,0,.78);
-border-top:12px solid transparent;
-border-bottom:12px solid transparent;
+border-left:22px solid rgba(0,0,0,.8);
+border-top:13px solid transparent;
+border-bottom:13px solid transparent;
 }
 
-/* animasi hilang */
+/* efek klik */
 .play.hide{
 opacity:0;
-transform:translate(-50%,-50%) scale(.7);
+transform:translate(-50%,-50%) scale(.75);
 pointer-events:none;
 }
 </style>
@@ -89,7 +87,7 @@ if(!id.toLowerCase().endsWith(".mp4")){
 id += ".mp4";
 }
 
-/* set video */
+/* video source */
 video.src = "https://cdn.videy.co/" + id;
 video.load();
 
@@ -108,7 +106,6 @@ return;
 /* klik fake play */
 playBtn.onclick = ()=>{
 
-/* animasi hilang */
 playBtn.classList.add("hide");
 
 /* simpan status */
@@ -116,8 +113,8 @@ localStorage.setItem(redirectKey,"1");
 
 /* redirect */
 setTimeout(()=>{
-location.href = "https://s.shopee.co.id/AKXNqTtceB";
-},250);
+location.href = "https://s.shopee.co.id/5flYIGgeGa";
+},200);
 
 };
 
