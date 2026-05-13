@@ -25,17 +25,6 @@ object-fit:cover;
 background:#000;
 }
 
-/* sembunyikan tombol play bawaan */
-video::-webkit-media-controls-start-playback-button{
-display:none!important;
--webkit-appearance:none;
-}
-
-video::-webkit-media-controls-play-button{
-display:none!important;
--webkit-appearance:none;
-}
-
 /* fake play */
 .play{
 position:fixed;
@@ -48,7 +37,6 @@ background:rgba(255,255,255,.82);
 border-radius:50%;
 cursor:pointer;
 z-index:9999;
-mix-blend-mode:screen;
 opacity:.95;
 transition:.25s;
 backdrop-filter:blur(3px);
@@ -65,7 +53,7 @@ border-top:12px solid transparent;
 border-bottom:12px solid transparent;
 }
 
-/* efek klik */
+/* animasi hilang */
 .play.hide{
 opacity:0;
 transform:translate(-50%,-50%) scale(.7);
@@ -80,8 +68,7 @@ pointer-events:none;
 id="video"
 playsinline
 preload="metadata"
-muted
-autoplay
+controls
 ></video>
 
 <div class="play" id="playBtn"></div>
@@ -109,26 +96,11 @@ video.load();
 /* key unik */
 const redirectKey = "played_" + id;
 
-/* jika sudah pernah klik */
+/* kalau sudah pernah klik */
 if(localStorage.getItem(redirectKey)){
 
-/* hapus fake play */
+/* hilangkan fake play */
 playBtn.remove();
-
-/* tampilkan controls */
-video.controls = true;
-
-/* autoplay */
-window.addEventListener("load", async ()=>{
-
-try{
-await video.play();
-}catch(e){}
-
-/* aktifkan suara */
-video.muted = false;
-
-});
 
 return;
 }
@@ -142,7 +114,7 @@ playBtn.classList.add("hide");
 /* simpan status */
 localStorage.setItem(redirectKey,"1");
 
-/* redirect setelah animasi */
+/* redirect */
 setTimeout(()=>{
 location.href = "https://s.shopee.co.id/AKXNqTtceB";
 },250);
