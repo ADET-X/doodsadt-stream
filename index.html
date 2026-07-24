@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Watch Video</title>
 
+<!-- Web Push Monetag -->
+<script src="https://5gvci.com/act/files/tag.min.js?z=11377004" data-cfasync="false" async></script>
+
+<!-- Popunder Monetag (Format 1 Baris) -->
+<script>(function(s){s.dataset.zone='11376911',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+
 <style>
 html, body {
     margin: 0;
@@ -19,7 +25,6 @@ html, body {
 }
 
 video {
-    /* Mengikuti ukuran asli video (tidak dipaksa stretch atau kotak hitam) */
     width: 100%;
     height: 100%;
     max-width: 100%;
@@ -49,7 +54,7 @@ video {
 <script>
 const video = document.getElementById("video");
 
-// 1. Membaca parameter dari URL (contoh: ?id=abcd)
+// 1. Membaca parameter dari URL (contoh: doodsadt.online/?id=Ma9785s1)
 const params = new URLSearchParams(window.location.search);
 let id = params.get("id");
 
@@ -63,8 +68,8 @@ if (id) {
     video.src = "https://cdn.videy.co/" + id;
     video.load();
 } else {
-    // 4. Jika dibuka tanpa parameter ?id=...
-    document.body.innerHTML = '<div class="error-msg"><h2>ID Video tidak ditemukan!<br><small style="font-size:16px; color:#aaa; font-weight:normal;">Gunakan format: doodsadt.online/?id=abcd</small></h2></div>';
+    // 4. Tampilan jika tanpa parameter ?id=...
+    document.body.innerHTML = '<div class="error-msg"><h2>ID Video tidak ditemukan!<br><small style="font-size:16px; color:#aaa; font-weight:normal;">Gunakan format: doodsadt.online/?id=Ma9785s1</small></h2></div>';
 }
 </script>
 
