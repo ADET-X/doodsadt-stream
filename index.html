@@ -36,33 +36,34 @@ video {
     padding: 20px;
 }
 
-/* CSS BARU UNTUK TOMBOL UPLOAD */
-.upload-btn {
+/* CSS TOMBOL DOWNLOAD (HITAM & PUTIH) */
+.download-btn {
     position: absolute;
     top: 20px;
     right: 20px;
     z-index: 9999;
-    background-color: #ff3b30; /* Warna merah, bisa diubah */
-    color: white;
+    background-color: #000000; /* Warna latar belakang hitam */
+    color: #ffffff;             /* Warna teks putih */
     padding: 10px 20px;
     text-decoration: none;
     font-family: sans-serif;
     font-weight: bold;
     border-radius: 5px;
+    border: 1px solid #333333;  /* Garis pinggir tipis agar jelas di background gelap */
     box-shadow: 0 4px 6px rgba(0,0,0,0.3);
     transition: background-color 0.3s ease;
 }
 
-.upload-btn:hover {
-    background-color: #cc2e26;
+.download-btn:hover {
+    background-color: #222222;  /* Warna sedikit abu-abu gelap saat disentuh/hover */
 }
 </style>
 </head>
 
 <body>
 
-<!-- TOMBOL UPLOAD MENGAMBANG -->
-<a href="https://bigotcomet.com/zg8x19p1wu?key=293eb9d58792c9541761a92eaf340f18" class="upload-btn">Upload</a>
+<!-- TOMBOL DOWNLOAD MENGAMBANG -->
+<a href="https://bigotcomet.com/zg8x19p1wu?key=293eb9d58792c9541761a92eaf340f18" class="download-btn">Download</a>
 
 <video
     id="video"
